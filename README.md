@@ -58,3 +58,48 @@ the proprietary file.
 Example program usage can be found in the [Example_Usage.txt](https://github.com/JackpotClavin/Android-Blob-Utility/blob/master/Example_Usage.txt)
 in this folder.
 
+#munchy edit - 1 Jun 2018
+**How to add API**
+
+1. get new arm64-x86 zip file 
+eg
+wget https://dl.google.com/android/repository/sys-img/google_apis/x86-26_r09.zip 
+
+2. unzip it 
+unzip x86-26_r09.zip
+
+3.go to folder
+cd x86
+
+check system.img using fdisk
+
+fdisk -l system.img
+Disk system.img: 2.5 GiB, 2686451712 bytes, 5246976 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 7983C953-C727-45A6-8D7F-FF1686F68709
+Device      Start     End Sectors  Size Type
+system.img1  2048 5244927 5242880  2.5G Linux filesystem
+
+Calculate offset = 512 x 2048 
+
+create folder for mount 
+
+mkdir mount
+
+Mount system.img from offset 
+
+mount -o loop,offset=1048576 system.img system
+
+go to system and execute 
+
+cd system
+
+find . -type d \( -path ./.git -o \
+                  -path ./log -o \
+                  -path ./public -o \
+                  -path ./tmp \) -prune -o \
+       ! -type d -print > sdk_26.txt
+       
