@@ -130,4 +130,5 @@ Thank a lot to :
 - @JackpotClavin : https://github.com/JackpotClavin/Android-Blob-Utility
 - @munchycool : https://github.com/munchycool/Android-Blob-Utility
 - @imasaru : https://github.com/imasaru/Android-Blob-Utility
-- @coc0a : https://github.com/coc0a/Android-Blob-Utility/commit/3be1c04f7edaf39a829f569479151ef70edc5f64
+- @coc0a : https://github.com/coc0a/Android-Blob-Utility
+- @minz1 : https://github.com/minz1/Android-Blob-Utility
