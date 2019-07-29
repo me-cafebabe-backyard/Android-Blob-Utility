@@ -58,22 +58,21 @@ the proprietary file.
 Example program usage can be found in the [Example_Usage.txt](https://github.com/JackpotClavin/Android-Blob-Utility/blob/master/Example_Usage.txt)
 in this folder.
 
-#munchy edit - 1 Jun 2018
-**How to add API**
+# How to add an API
 
-1. get new arm64-x86 zip file 
-eg
-wget https://dl.google.com/android/repository/sys-img/google_apis/x86-26_r09.zip 
+1. Get the Android system image for Android emulator, from the Android Studio SDK manager or with the direct link (example for the SDK 26 : https://dl.google.com/android/repository/sys-img/google_apis/x86-26_r09.zip )
 
-2. unzip it 
+2. Unizip it and go inside the folder
+```
 unzip x86-26_r09.zip
-
-3.go to folder
 cd x86
+```
 
-check system.img using fdisk
+3. You need to calculate the offset of the *system.img* : **(sector size)** x **(partition start)**. You can use fidsk to get this informations :
 
+```
 fdisk -l system.img
+
 Disk system.img: 2.5 GiB, 2686451712 bytes, 5246976 sectors
 Units: sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
@@ -83,23 +82,42 @@ Disk identifier: 7983C953-C727-45A6-8D7F-FF1686F68709
 Device      Start     End Sectors  Size Type
 system.img1  2048 5244927 5242880  2.5G Linux filesystem
 
-Calculate offset = 512 x 2048 
+## Now calculate offset :
+512 x 2048 = 1048576
+```
 
-create folder for mount 
+4. Create a directory to mount the system image and mount it with options *loop* and *offset*
 
-mkdir mount
+```
+mkdir android_system_mount
+mount -o loop,offset=1048576 system.img android_system_mount
+```
 
-Mount system.img from offset 
+5. Now you can get the list of all files inside the system image
 
-mount -o loop,offset=1048576 system.img system
+```
+### Go to the system mount directory
+cd android_system_mount
 
-go to system and execute 
+### List the files and save the liste to a text file. Change the path to the emulator_systems directory inside Android Blob utility
+find . -type d \( -path ./.git -o -path ./log -o -path ./public -o -path ./tmp \) -prune -o ! -type d -print > /path/where/is/android_blob_utility/emulator_systems/sdk_26.txt
 
-cd system
+### Same command but with multiline
+find . -type d \( \
+    -path ./.git -o \
+    -path ./log -o \
+    -path ./public -o \
+    -path ./tmp \ 
+    \) -prune -o ! -type d -print > /path/where/is/android_blob_utility/emulator_systems/sdk_26.txt
+```
 
-find . -type d \( -path ./.git -o \
-                  -path ./log -o \
-                  -path ./public -o \
-                  -path ./tmp \) -prune -o \
-       ! -type d -print > sdk_26.txt
-       
+# Todo
+- precise to remove some files at the end of *How to add an API*, I think there is only /system/* files list.
+- Find a better command for listing all file inside system partition.
+
+# Contributor
+
+Thank a lot to :
+- @JackpotClavin : https://github.com/JackpotClavin/Android-Blob-Utility
+- @munchycool : https://github.com/munchycool/Android-Blob-Utility
+- @imasaru : https://github.com/imasaru/Android-Blob-Utility
