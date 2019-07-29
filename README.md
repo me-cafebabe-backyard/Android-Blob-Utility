@@ -89,3 +89,4 @@ Thank a lot to :
 - @imasaru : https://github.com/imasaru/Android-Blob-Utility
 - @coc0a : https://github.com/coc0a/Android-Blob-Utility
 - @minz1 : https://github.com/minz1/Android-Blob-Utility
+- @Klozz : https://github.com/Klozz/Android-Blob-Utility/commit/212827faefa073a0e86fff20b97c0d9cc49a9173
