@@ -139,7 +139,7 @@ void mark_lib_as_processed(char *lib) {
 
 bool build_prop_checker(void) {
 
-    char buildprop_checker[256];
+    char buildprop_checker[300];
     char *line, *value;
     long l;
     size_t n;
