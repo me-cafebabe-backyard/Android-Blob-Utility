@@ -24,8 +24,8 @@
 #define _GNU_SOURCE
 #include <stdlib.h>
 
-#define MAX_LIB_NAME 50
-#define ALL_LIBS_SIZE 20480 /* 20KB */
+#define MAX_LIB_NAME 100
+#define ALL_LIBS_SIZE 102400 /* 20KB */
 
 /* #define DEBUG */
 
