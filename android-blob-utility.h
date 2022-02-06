@@ -27,10 +27,6 @@
 #define MAX_LIB_NAME 100
 #define ALL_LIBS_SIZE 102400 /* 20KB */
 
-/* #define DEBUG */
-
-/* #define NON_TREBLE */
-
 #define NUM_FILES 100
 
 #define EXCLUCE_FILE_LIST_FILE "exclude-files.txt"
