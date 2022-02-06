@@ -35,7 +35,7 @@
 
 #define NUM_FILES 100
 
-#define EXCLUCE_LIST_FILE "exclude.txt"
+#define EXCLUCE_PATH_LIST_FILE "exclude.txt"
 
 const char *blob_directories[] = {
     "/lib64/egl/",
