@@ -45,6 +45,7 @@ char partition[10] = PARTITION;
 char num_files_str[2];
 
 char all_libs[ALL_LIBS_SIZE] = {0};
+char *exclude_file_list_buffer;
 char *exclude_path_list_buffer;
 
 /* The purpose of this program is to help find proprietary libraries that are needed to
@@ -134,7 +135,17 @@ void mark_lib_as_processed(char *lib) {
  * in order for the library of daemon to run.
  */
 
-bool check_emulator_files_for_match(char *emulator_full_path) {
+bool check_emulator_files_filename_for_match(char *emulator_full_filename) {
+    char *p;
+    if (!exclude_file_list_buffer)
+        return false;
+    p = strstr(exclude_file_list_buffer, emulator_full_filename);
+    if (p && *(p - 1) != '#')
+        return true;
+    return false;
+}
+
+bool check_emulator_files_path_for_match(char *emulator_full_path) {
     char *p;
     if (!exclude_path_list_buffer)
         return false;
@@ -254,11 +265,14 @@ void check_emulator_for_lib(char *emulator_check) {
     if (check_if_repeat(emulator_check))
         return;
 
+    if (check_emulator_files_filename_for_match(emulator_check))
+        return;
+
     for (i = 0; blob_directories[i]; i++) {
         sprintf(emulator_full_path, "%s%s%s", partition, blob_directories[i], emulator_check);
         //printf("emulator_full_path: %s\n", emulator_full_path);
         /* don't do anything if the file is in the emulator, as that means it's not proprietary. */
-        if (check_emulator_files_for_match(emulator_full_path))
+        if (check_emulator_files_path_for_match(emulator_full_path))
             return;
     }
 
@@ -490,7 +504,7 @@ int main(int argc, char **argv) {
     char *last_slash;
     int num_files = NUM_FILES;
     long length = 0;
-    FILE *fp_path;
+    FILE *fp_file, *fp_path;
 
     char filename_buf[256];
     char *filename = filename_buf;
@@ -501,6 +515,16 @@ int main(int argc, char **argv) {
     read_user_input(num_files_str, sizeof(num_files_str), "How many files?\n");
 #endif
 
+    fp_file = fopen(EXCLUCE_FILE_LIST_FILE, "r");
+    if (fp_file) {
+        fseek(fp_file, 0, SEEK_END);
+        length = ftell(fp_file);
+        rewind(fp_file);
+
+        exclude_file_list_buffer = (char*)malloc(sizeof(char) * length);
+        fread(exclude_file_list_buffer, 1, length, fp_file);
+        fclose(fp_file);
+    }
     fp_path = fopen(EXCLUCE_PATH_LIST_FILE, "r");
     if (fp_path) {
         fseek(fp_path, 0, SEEK_END);
@@ -533,6 +557,8 @@ int main(int argc, char **argv) {
     }
 
     fprintf(stderr, "Completed successfully.\n");
+    if (exclude_file_list_buffer)
+        free(exclude_file_list_buffer);
     if (exclude_path_list_buffer)
         free(exclude_path_list_buffer);
     argc = argc;

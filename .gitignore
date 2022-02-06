@@ -1,3 +1,6 @@
 # make files created after build
 android-blob-utility
 android-blob-utility.o
+
+# exclude lists
+exclude-*.txt
