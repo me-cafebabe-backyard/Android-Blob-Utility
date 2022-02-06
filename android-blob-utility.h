@@ -29,7 +29,7 @@
 
 /* #define DEBUG */
 
-#define SYSTEM_DUMP_ROOT "/home/android/system_dump"
+#define PARTITION_DUMP_ROOT "/mnt/android/partition_dump"
 
 #define PARTITION "vendor"
 

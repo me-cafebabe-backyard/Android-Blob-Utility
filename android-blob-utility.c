@@ -40,7 +40,7 @@
 bool dot_so_finder(char *filename);
 void check_emulator_for_lib(char *emulator_check);
 
-char system_dump_root[246] = SYSTEM_DUMP_ROOT;
+char partition_dump_root[246] = PARTITION_DUMP_ROOT;
 char partition[10] = PARTITION;
 
 char all_libs[ALL_LIBS_SIZE] = {0};
@@ -160,7 +160,7 @@ bool find_wildcard_libraries(char *beginning, char *end) {
         end = strstr(end, lib_ending);
 
     for (i = 0; blob_directories[i]; i++) {
-        sprintf(full_path, "%s%s", system_dump_root, blob_directories[i]);
+        sprintf(full_path, "%s%s", partition_dump_root, blob_directories[i]);
         dir = opendir(full_path);
         if (!dir)
             continue;
@@ -217,7 +217,7 @@ bool get_lib_from_system_dump(char *system_check) {
     bool found_hit = false;
 
     for (i = 0; blob_directories[i]; i++) {
-        sprintf(system_dump_path_to_blob, "%s%s%s", system_dump_root, blob_directories[i],
+        sprintf(system_dump_path_to_blob, "%s%s%s", partition_dump_root, blob_directories[i],
                 system_check);
         if (!access(system_dump_path_to_blob, F_OK)) {
             printf("%s%s%s\n", partition, blob_directories[i], system_check);
@@ -494,7 +494,7 @@ int main(int argc, char **argv) {
     char *filename = filename_buf;
 
 #ifndef VARIABLES_PROVIDED
-    read_user_input(system_dump_root, sizeof(system_dump_root), "System dump root?\n");
+    read_user_input(partition_dump_root, sizeof(partition_dump_root), "Partition dump root?\n");
     read_user_input(partition, sizeof(partition), "Partition? (Such as vendor)\n");
 #endif
 
