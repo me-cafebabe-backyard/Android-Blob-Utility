@@ -40,8 +40,8 @@
 bool dot_so_finder(char *filename);
 void check_emulator_for_lib(char *emulator_check);
 
-char partition_dump_root[246] = PARTITION_DUMP_ROOT;
-char partition[10] = PARTITION;
+char partition_dump_root[246];
+char partition[10];
 char num_files_str[2];
 
 char all_libs[ALL_LIBS_SIZE] = {0};
@@ -517,12 +517,27 @@ int main(int argc, char **argv) {
     char filename_buf[256];
     char *filename = filename_buf;
 
-#ifndef VARIABLES_PROVIDED
-    read_user_input(partition_dump_root, sizeof(partition_dump_root), "Partition dump root?\n");
 #ifndef NON_TREBLE
-    read_user_input(partition, sizeof(partition), "Partition? (Such as vendor)\n");
+    printf("This program was compiled for processing Treble ROMs.\n");
+    if (argc != 3 && argc != 4) {
+        fprintf(stderr, "Required parameters: <Partition dump root> <Partition name> [Number of files]\n");
+        return 1;
+    }
+#else
+    printf("This program was compiled for processing non-Treble ROMs.\n");
+    if (argc != 2 && argc != 3) {
+        fprintf(stderr, "Required parameters: <Partition dump root> [Number of files]\n");
+        return 1;
+    }
 #endif
-    read_user_input(num_files_str, sizeof(num_files_str), "How many files?\n");
+    strncpy(partition_dump_root, argv[1], sizeof(partition_dump_root));
+#ifndef NON_TREBLE
+    strncpy(partition, argv[2], sizeof(partition));
+    if (argv[3])
+        strncpy(num_files_str, argv[3], sizeof(num_files_str));
+#else
+    if (argv[2])
+        strncpy(num_files_str, argv[2], sizeof(num_files_str));
 #endif
 
     fp_file = fopen(EXCLUCE_FILE_LIST_FILE, "r");

@@ -31,10 +31,6 @@
 
 /* #define NON_TREBLE */
 
-#define PARTITION_DUMP_ROOT "./"
-
-#define PARTITION "vendor"
-
 #define NUM_FILES 100
 
 #define EXCLUCE_FILE_LIST_FILE "exclude-files.txt"
