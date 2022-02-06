@@ -42,6 +42,7 @@ void check_emulator_for_lib(char *emulator_check);
 
 char partition_dump_root[246] = PARTITION_DUMP_ROOT;
 char partition[10] = PARTITION;
+char num_files_str[2];
 
 char all_libs[ALL_LIBS_SIZE] = {0};
 char *exclude_list_buffer;
@@ -487,7 +488,7 @@ void read_user_input(char *input, int len, char *fmt) {
 int main(int argc, char **argv) {
 
     char *last_slash;
-    int num_files;
+    int num_files = NUM_FILES;
     long length = 0;
     FILE *fp;
 
@@ -497,6 +498,7 @@ int main(int argc, char **argv) {
 #ifndef VARIABLES_PROVIDED
     read_user_input(partition_dump_root, sizeof(partition_dump_root), "Partition dump root?\n");
     read_user_input(partition, sizeof(partition), "Partition? (Such as vendor)\n");
+    read_user_input(num_files_str, sizeof(num_files_str), "How many files?\n");
 #endif
 
     fp = fopen(EXCLUCE_LIST_FILE, "r");
@@ -510,12 +512,10 @@ int main(int argc, char **argv) {
         fclose(fp);
     }
 
-    fprintf(stderr, "How many files?\n");
-    scanf("%d%*c", &num_files);
-
+    num_files = atoi(num_files_str);
     if (num_files <= 0) {
-        fprintf(stderr, "Invalid number of files: %d\n", num_files);
-        return 1;
+        fprintf(stderr, "Invalid number of files: %d, default to %d.\n", num_files, NUM_FILES);
+        num_files = 100;
     }
 
     while (num_files) {

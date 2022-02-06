@@ -29,9 +29,11 @@
 
 /* #define DEBUG */
 
-#define PARTITION_DUMP_ROOT "/mnt/android/partition_dump"
+#define PARTITION_DUMP_ROOT "./"
 
 #define PARTITION "vendor"
+
+#define NUM_FILES 100
 
 #define EXCLUCE_LIST_FILE "exclude.txt"
 
