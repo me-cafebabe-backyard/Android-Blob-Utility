@@ -466,10 +466,10 @@ void read_user_input(char *input, int len, char *fmt) {
 
     sprintf(message, fmt, input);
 #ifndef USE_READLINE
-    fprintf(stderr, "%s", message);
+    fprintf(stdout, "%s", message);
     fgets(res, sizeof res, stdin);
 #else
-    rl_outstream = stderr;
+    rl_outstream = stdout;
     tmp = readline(message);
     if (tmp)
     {
