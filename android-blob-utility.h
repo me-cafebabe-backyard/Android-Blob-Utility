@@ -31,6 +31,8 @@
 
 #define SYSTEM_DUMP_ROOT "/home/android/system_dump"
 
+#define PARTITION "vendor"
+
 #define EXCLUCE_LIST_FILE "exclude.txt"
 
 const char *blob_directories[] = {

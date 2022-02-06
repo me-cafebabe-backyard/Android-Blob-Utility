@@ -40,7 +40,8 @@
 bool dot_so_finder(char *filename);
 void check_emulator_for_lib(char *emulator_check);
 
-char system_dump_root[256] = SYSTEM_DUMP_ROOT;
+char system_dump_root[246] = SYSTEM_DUMP_ROOT;
+char partition[10] = PARTITION;
 
 char all_libs[ALL_LIBS_SIZE] = {0};
 char *exclude_list_buffer;
@@ -219,7 +220,7 @@ bool get_lib_from_system_dump(char *system_check) {
         sprintf(system_dump_path_to_blob, "%s%s%s", system_dump_root, blob_directories[i],
                 system_check);
         if (!access(system_dump_path_to_blob, F_OK)) {
-            printf("%s%s\n", blob_directories[i], system_check);
+            printf("%s%s%s\n", partition, blob_directories[i], system_check);
             found_hit = dot_so_finder(system_dump_path_to_blob);
         }
     }
@@ -494,6 +495,7 @@ int main(int argc, char **argv) {
 
 #ifndef VARIABLES_PROVIDED
     read_user_input(system_dump_root, sizeof(system_dump_root), "System dump root?\n");
+    read_user_input(partition, sizeof(partition), "Partition? (Such as vendor)\n");
 #endif
 
     fp = fopen(EXCLUCE_LIST_FILE, "r");
