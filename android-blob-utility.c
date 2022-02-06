@@ -133,55 +133,6 @@ void mark_lib_as_processed(char *lib) {
 #endif
 }
 
-/* Just a little function to check if the user has inputted the correct folder that this program
- * is expecting to receive from the user
- */
-
-bool build_prop_checker(void) {
-
-    char buildprop_checker[300];
-    char *line, *value;
-    long l;
-    size_t n;
-    FILE *fp;
-
-    sprintf(buildprop_checker, "%s/build.prop", system_dump_root);
-    fp = fopen(buildprop_checker, "r");
-    if (! fp) {
-        fprintf(stderr, "Error: build.prop file not found in system dump's root.\n");
-        fprintf(stderr, "Your path to the system dump is not correct.\n");
-        fprintf(stderr, "The command:\n");
-        fprintf(stderr, "\"ls %s/build.prop\"\n", system_dump_root);
-        fprintf(stderr, "should yield the system dump's build.prop file.\n");
-        fprintf(stderr, "Exiting!\n");
-        return true;
-    }
-    while (!feof(fp)) {
-        n = 0;
-        line = NULL;
-        getline(&line, &n, fp);
-        value = strchr(line, '=');
-        if (value) {
-            *value++ = '\0';
-            l = strlen(value) - 1;
-            while (l >= 0 && value[l] == '\n')
-            {
-                value[l] = '\0';
-                l--;
-            }
-            if (!strcmp(line, "ro.build.version.sdk"))
-                sdk_version = atoi(value);
-            if (!strcmp(line, "ro.product.brand"))
-                strcpy(system_vendor, value);
-            if (!strcmp(line, "ro.product.device"))
-                strcpy(system_device, value);
-        }
-        free(line);
-    }
-    fclose(fp);
-    return false;
-}
-
 /* See if the filename in the /system dump matches a file in the SDK version's emulator dump.
  * if it is not in the emulator's dump, it means it's a proprietary or must be built from source
  * in order for the library of daemon to run.
@@ -550,9 +501,6 @@ int main(int argc, char **argv) {
 
 #ifndef VARIABLES_PROVIDED
     read_user_input(system_dump_root, sizeof(system_dump_root), "System dump root?\n");
-
-    if (build_prop_checker())
-        return 1;
 
     read_user_input(system_vendor, sizeof(system_vendor), "Target vendor name [%s]?\n");
     read_user_input(system_device, sizeof(system_device), "Target device name [%s]?\n");
