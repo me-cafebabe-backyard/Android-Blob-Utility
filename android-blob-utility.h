@@ -29,14 +29,9 @@
 
 /* #define DEBUG */
 
-/* Change value below to match your /system dump's SDK version. */
-/* See: https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels */
-#define SYSTEM_DUMP_SDK_VERSION 25 /* Android Nougat */
-
 #define SYSTEM_DUMP_ROOT "/home/android/system_dump"
 
-#define SYSTEM_VENDOR "manufacturer"
-#define SYSTEM_DEVICE "device"
+#define EXCLUCE_LIST_FILE "exclude.txt"
 
 const char *blob_directories[] = {
     "/lib64/egl/",

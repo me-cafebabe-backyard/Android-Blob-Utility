@@ -42,14 +42,8 @@ void check_emulator_for_lib(char *emulator_check);
 
 char system_dump_root[256] = SYSTEM_DUMP_ROOT;
 
-char system_vendor[32] = SYSTEM_VENDOR;
-
-char system_device[32] = SYSTEM_DEVICE;
-
 char all_libs[ALL_LIBS_SIZE] = {0};
-char *sdk_buffer;
-
-int sdk_version = SYSTEM_DUMP_SDK_VERSION;
+char *exclude_list_buffer;
 
 /* The purpose of this program is to help find proprietary libraries that are needed to
  * build AOSP-based ROMs. Running the top command on the stock ROM will help find proprietary
@@ -140,8 +134,9 @@ void mark_lib_as_processed(char *lib) {
 
 bool check_emulator_files_for_match(char *emulator_full_path) {
     char *p;
-
-    p = strstr(sdk_buffer, emulator_full_path);
+    if (!exclude_list_buffer)
+        return false;
+    p = strstr(exclude_list_buffer, emulator_full_path);
     if (p && *(p - 1) != '#')
         return true;
     return false;
@@ -258,7 +253,7 @@ void check_emulator_for_lib(char *emulator_check) {
         return;
 
     for (i = 0; blob_directories[i]; i++) {
-        sprintf(emulator_full_path, "/system%s%s", blob_directories[i], emulator_check);
+        sprintf(emulator_full_path, "%s%s", blob_directories[i], emulator_check);
         /* don't do anything if the file is in the emulator, as that means it's not proprietary. */
         if (check_emulator_files_for_match(emulator_full_path))
             return;
@@ -490,8 +485,6 @@ void read_user_input(char *input, int len, char *fmt) {
 int main(int argc, char **argv) {
 
     char *last_slash;
-    char emulator_system_file[32], *sdkversionstr;
-    size_t n;
     int num_files;
     long length = 0;
     FILE *fp;
@@ -501,34 +494,18 @@ int main(int argc, char **argv) {
 
 #ifndef VARIABLES_PROVIDED
     read_user_input(system_dump_root, sizeof(system_dump_root), "System dump root?\n");
-
-    read_user_input(system_vendor, sizeof(system_vendor), "Target vendor name [%s]?\n");
-    read_user_input(system_device, sizeof(system_device), "Target device name [%s]?\n");
-
-    fprintf(stderr, "System dump SDK version? [%d]\n", sdk_version);
-    fprintf(stderr, "See: https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels\n");
-    sdkversionstr = NULL;
-    n = 0;
-    getline(&sdkversionstr, &n, stdin);
-    if (isdigit(*sdkversionstr))
-        sdk_version = atoi(sdkversionstr);
-    free(sdkversionstr);
 #endif
 
-    sprintf(emulator_system_file, "emulator_systems/sdk_%d.txt", sdk_version);
-    fp = fopen(emulator_system_file, "r");
-    if (!fp) {
-        fprintf(stderr, "SDK text file %s not found, exiting!\n", emulator_system_file);
-        return 1;
+    fp = fopen(EXCLUCE_LIST_FILE, "r");
+    if (fp) {
+        fseek(fp, 0, SEEK_END);
+        length = ftell(fp);
+        rewind(fp);
+
+        exclude_list_buffer = (char*)malloc(sizeof(char) * length);
+        fread(exclude_list_buffer, 1, length, fp);
+        fclose(fp);
     }
-    fseek(fp, 0, SEEK_END);
-    length = ftell(fp);
-    rewind(fp);
-
-    sdk_buffer = (char*)malloc(sizeof(char) * length);
-    fread(sdk_buffer, 1, length, fp);
-    fclose(fp);
-
 
     fprintf(stderr, "How many files?\n");
     scanf("%d%*c", &num_files);
@@ -548,7 +525,8 @@ int main(int argc, char **argv) {
     }
 
     fprintf(stderr, "Completed successfully.\n");
-    free(sdk_buffer);
+    if (exclude_list_buffer)
+        free(exclude_list_buffer);
     argc = argc;
     argv = argv;
 
