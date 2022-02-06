@@ -572,6 +572,7 @@ int main(int argc, char **argv) {
 
         read_user_input(filename, sizeof(filename_buf), "File name?\n");
 
+        printf("######################### BEGIN %s #########################\n", filename);
         if (get_lib_from_system_dump(filename))
         {
             last_slash = strrchr(filename, '/');
@@ -579,6 +580,7 @@ int main(int argc, char **argv) {
                 check_emulator_for_lib(++last_slash);
             num_files--;
         }
+        printf("######################### END %s   #########################\n", filename);
     }
 
     fprintf(stderr, "Completed successfully.\n");
