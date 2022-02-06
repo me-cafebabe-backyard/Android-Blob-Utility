@@ -29,6 +29,8 @@
 
 /* #define DEBUG */
 
+/* #define NON_TREBLE */
+
 #define PARTITION_DUMP_ROOT "./"
 
 #define PARTITION "vendor"
@@ -52,6 +54,15 @@ const char *blob_directories[] = {
     "/lib64/camera/components/",
     "/lib/vndk/",
     "/lib64/vndk/",
+#ifdef NON_TREBLE
+    "/vendor/bin/",
+    "/vendor/lib/",
+    "/vendor/lib64/",
+    "/vendor/lib/hw/",
+    "/vendor/lib64/hw/",
+    "/vendor/lib/egl/",
+    "/vendor/lib64/egl/",
+#endif
     NULL
 };
 
