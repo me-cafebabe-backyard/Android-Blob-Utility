@@ -254,7 +254,8 @@ void check_emulator_for_lib(char *emulator_check) {
         return;
 
     for (i = 0; blob_directories[i]; i++) {
-        sprintf(emulator_full_path, "%s%s", blob_directories[i], emulator_check);
+        sprintf(emulator_full_path, "%s%s%s", partition, blob_directories[i], emulator_check);
+        //printf("emulator_full_path: %s\n", emulator_full_path);
         /* don't do anything if the file is in the emulator, as that means it's not proprietary. */
         if (check_emulator_files_for_match(emulator_full_path))
             return;
