@@ -172,7 +172,7 @@ bool find_wildcard_libraries(char *beginning, char *end) {
         end = strstr(end, lib_ending);
 
     for (i = 0; blob_directories[i]; i++) {
-        sprintf(full_path, "%s%s", partition_dump_root, blob_directories[i]);
+        sprintf(full_path, "%s/%s/", partition_dump_root, blob_directories[i]);
         dir = opendir(full_path);
         if (!dir)
             continue;
@@ -229,13 +229,13 @@ bool get_lib_from_system_dump(char *system_check) {
     bool found_hit = false;
 
     for (i = 0; blob_directories[i]; i++) {
-        sprintf(system_dump_path_to_blob, "%s%s%s", partition_dump_root, blob_directories[i],
+        sprintf(system_dump_path_to_blob, "%s/%s/%s", partition_dump_root, blob_directories[i],
                 system_check);
         if (!access(system_dump_path_to_blob, F_OK)) {
 #ifdef NON_TREBLE
-            printf("%s%s\n", blob_directories[i], system_check);
+            printf("%s/%s\n", blob_directories[i], system_check);
 #else
-            printf("%s%s%s\n", partition, blob_directories[i], system_check);
+            printf("%s/%s/%s\n", partition, blob_directories[i], system_check);
 #endif
             found_hit = dot_so_finder(system_dump_path_to_blob);
         }
@@ -274,9 +274,9 @@ void check_emulator_for_lib(char *emulator_check) {
 
     for (i = 0; blob_directories[i]; i++) {
 #ifdef NON_TREBLE
-        sprintf(emulator_full_path, "%s%s", blob_directories[i], emulator_check);
+        sprintf(emulator_full_path, "%s/%s", blob_directories[i], emulator_check);
 #else
-        sprintf(emulator_full_path, "%s%s%s", partition, blob_directories[i], emulator_check);
+        sprintf(emulator_full_path, "%s/%s/%s", partition, blob_directories[i], emulator_check);
 #endif
         //printf("emulator_full_path: %s\n", emulator_full_path);
         /* don't do anything if the file is in the emulator, as that means it's not proprietary. */
