@@ -175,7 +175,7 @@ bool find_wildcard_libraries(char *beginning, char *end) {
     }
 
     if (!found)
-        fprintf(stderr, "warning: wildcard %s%%s%s missing or broken\n", beginning, end);
+        fprintf(stderr, "# Warning: wildcard %s%%s%s missing or broken\n", beginning, end);
     return found;
 }
 
@@ -236,7 +236,7 @@ bool get_lib_from_system_dump(char *system_check) {
     }
 
     if (!found_hit)
-        fprintf(stderr, "warning: blob file %s missing or broken\n", system_check);
+        fprintf(stderr, "# Warning: blob file %s missing or broken\n", system_check);
     return found_hit;
 }
 
@@ -511,6 +511,11 @@ int main(int argc, char **argv) {
 
     fprintf(stderr, "How many files?\n");
     scanf("%d%*c", &num_files);
+
+    if (num_files <= 0) {
+        fprintf(stderr, "Invalid number of files: %d\n", num_files);
+        return 1;
+    }
 
     while (num_files) {
         fprintf(stderr, "Files to go: %d\n", num_files);
