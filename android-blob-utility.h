@@ -46,6 +46,12 @@ const char *blob_directories[] = {
     "/lib64/",
     "/lib/",
     "/bin/",
+    "/bin/hw/",
+    "/lib/camera/",
+    "/lib64/camera/",
+    "/lib64/camera/components/",
+    "/lib/vndk/",
+    "/lib64/vndk/",
     NULL
 };
 
