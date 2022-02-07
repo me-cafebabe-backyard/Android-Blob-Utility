@@ -41,7 +41,10 @@ const char *blob_directories[] = {
     "/lib/",
     "/bin/",
     "/bin/hw/",
+    "/lib/soundfx/",
+    "/lib64/soundfx/",
     "/lib/camera/",
+    "/lib/camera/components/",
     "/lib64/camera/",
     "/lib64/camera/components/",
     "/lib/vndk/",
@@ -54,6 +57,8 @@ const char *blob_directories[] = {
     "/vendor/lib64/hw/",
     "/vendor/lib/egl/",
     "/vendor/lib64/egl/",
+    "/vendor/lib/soundfx/",
+    "/vendor/lib64/soundfx/",
 #endif
     NULL
 };
