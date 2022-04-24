@@ -35,6 +35,7 @@
 // Type of libs to search for
 #define LIB32
 #define LIB64
+//#define ADSP
 //#define QTI_CAMX
 
 const char *blob_directories[] = {
@@ -58,6 +59,15 @@ const char *blob_directories[] = {
     "/lib64/egl/",
     "/lib64/soundfx/",
 #endif // LIB64
+
+#ifdef ADSP
+#ifdef NON_TREBLE
+    "/vendor/lib/rfsa/adsp/",
+#else
+    "/lib/rfsa/adsp/",
+    "/lib64/rfsa/adsp/",
+#endif // NON_TREBLE
+#endif // ADSP
 
 #ifdef QTI_CAMX
     "/lib64/camera/",
