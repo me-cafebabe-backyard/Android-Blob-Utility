@@ -32,33 +32,52 @@
 #define EXCLUCE_FILE_LIST_FILE "exclude-files.txt"
 #define EXCLUCE_PATH_LIST_FILE "exclude-paths.txt"
 
+// Type of libs to search for
+#define LIB32
+#define LIB64
+//#define QTI_CAMX
+
 const char *blob_directories[] = {
     "/bin/",
+#ifndef NON_TREBLE
     "/bin/hw/",
+#endif
+
+#ifdef LIB32
     "/lib/",
-    "/lib/camera/",
-    "/lib/camera/components/",
-    "/lib/egl/",
     "/lib/hw/",
-    "/lib/soundfx/",
     "/lib/vndk/",
+    "/lib/egl/",
+    "/lib/soundfx/",
+#endif // LIB32
+
+#ifdef LIB64
     "/lib64/",
+    "/lib64/hw/",
+    "/lib64/vndk/",
+    "/lib64/egl/",
+    "/lib64/soundfx/",
+#endif // LIB64
+
+#ifdef QTI_CAMX
     "/lib64/camera/",
     "/lib64/camera/components/",
-    "/lib64/egl/",
-    "/lib64/hw/",
-    "/lib64/soundfx/",
-    "/lib64/vndk/",
+#endif // QTI_CAMX
+
 #ifdef NON_TREBLE
     "/vendor/bin/",
+#ifdef LIB32
     "/vendor/lib/",
     "/vendor/lib/egl/",
     "/vendor/lib/hw/",
     "/vendor/lib/soundfx/",
+#endif // LIB32
+#ifdef LIB64
     "/vendor/lib64/",
     "/vendor/lib64/egl/",
     "/vendor/lib64/hw/",
     "/vendor/lib64/soundfx/",
+#endif // LIB64
 #endif
     NULL
 };
