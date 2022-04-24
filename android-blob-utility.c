@@ -85,6 +85,12 @@ bool char_is_valid(char *s) {
         return true;
     if (*s == '_' || *s == '-')
         return true;
+    if (*s == '.')
+        return true;
+#ifndef NON_TREBLE
+    if (*s == '@')
+        return true;
+#endif
     if (*s == 0)
         return true;
     if (*s == '%') /* wildcard, bitches! */
@@ -332,7 +338,9 @@ void get_full_lib_name(char *found_lib) {
 
     long len;
     int num_chars;
+#ifdef NON_TREBLE
     int i;
+#endif
 
     ptr = found_lib;
     peek = ptr - 1;
@@ -343,6 +351,7 @@ void get_full_lib_name(char *found_lib) {
      * times, in which we will bail out citing that it was probably a false-positive
      */
     for (num_chars = 0; num_chars <= MAX_LIB_NAME; num_chars++) {
+#ifdef NON_TREBLE
         if (!strncmp(ptr, egl_beginning, strlen(egl_beginning)) || !strncmp(ptr, lib_beginning, strlen(lib_beginning))) {
             peek = ptr - 1;
             /* the peek below would fall victim to a file which is looking directly for
@@ -377,6 +386,12 @@ void get_full_lib_name(char *found_lib) {
             }
             break;
         }
+#else
+        if (!char_is_valid(ptr))
+            return;
+        if (*peek == 0 || *peek == ' ')
+            break;
+#endif
         if (num_chars == MAX_LIB_NAME) {
 #ifdef DEBUG
             fprintf(stderr, "Character limit exceeded! Full string was:\n");
@@ -391,7 +406,7 @@ void get_full_lib_name(char *found_lib) {
         ptr--;
         peek--;
     }
-    len = (long)(found_lib + strlen(lib_beginning)) - (long)ptr;
+    len = (long)(found_lib + strlen(lib_ending)) - (long)ptr;
     strncpy(full_name, ptr, len);
 
     check_emulator_for_lib(full_name);
