@@ -92,6 +92,24 @@ const char *blob_directories[] = {
     NULL
 };
 
+#define IGNORE_SPECIFIC_WILDCARDS
+#ifdef IGNORE_SPECIFIC_WILDCARDS
+const char *ignore_wildcards_beginning[] = {
+    "libactuator_",
+    "libchromatix_",
+    "libmmcamera_",
+    NULL
+};
+const char *ignore_wildcards_end[] = {
+    "libactuator_%s.so",
+    "libchromatix_%s.so",
+    "libmmcamera_%s.so",
+    "libmmcamera_%s_eeprom.so",
+    "_eeprom.so",
+    NULL
+};
+#endif
+
 const char *lib_beginning = "lib";
 const char *egl_beginning = "egl";
 

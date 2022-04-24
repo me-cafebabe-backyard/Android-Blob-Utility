@@ -174,6 +174,21 @@ bool find_wildcard_libraries(char *beginning, char *end) {
     int i;
     bool found = false;
 
+#ifdef IGNORE_SPECIFIC_WILDCARDS
+    for (i = 0; ignore_wildcards_beginning[i]; i++) {
+        if (strcmp(ignore_wildcards_beginning[i], beginning) == 0) {
+            fprintf(stderr, "# Warning: Ignored wildcard: %s%%s%s, because prefix matches with %s\n", beginning, end, ignore_wildcards_beginning[i]);
+            return false;
+        }
+    }
+    for (i = 0; ignore_wildcards_end[i]; i++) {
+        if (strcmp(ignore_wildcards_end[i], end) == 0) {
+            fprintf(stderr, "# Warning: Ignored wildcard: %s%%s%s, because suffix matches with %s\n", beginning, end, ignore_wildcards_end[i]);
+            return false;
+        }
+    }
+#endif
+
     if (strchr(end, '%') && strstr(end, lib_ending))
         end = strstr(end, lib_ending);
 
