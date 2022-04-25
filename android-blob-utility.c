@@ -230,6 +230,8 @@ bool process_wildcard(char *wildcard) {
         strcpy(end, ptr);
     }
 
+    fprintf(stderr, "# Info: Processing wildcard: %s%%s%s\n", beginning, end);
+
     return find_wildcard_libraries(beginning, end);
 }
 
