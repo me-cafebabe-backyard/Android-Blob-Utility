@@ -405,7 +405,7 @@ void get_full_lib_name(char *found_lib) {
 #else
         if (!char_is_valid(ptr))
             return;
-        if (*peek == 0 || *peek == ' ')
+        if (*peek == 0 || *peek == ' ' || *peek == '/')
             break;
 #endif
         if (num_chars == MAX_LIB_NAME) {
