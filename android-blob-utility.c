@@ -42,7 +42,6 @@ void check_emulator_for_lib(char *emulator_check);
 
 char partition_dump_root[246];
 char partition[10];
-char num_files_str[2];
 
 char all_libs[ALL_LIBS_SIZE] = {0};
 char *exclude_file_list_buffer;
@@ -540,7 +539,6 @@ void read_user_input(char *input, int len, char *fmt) {
 int main(int argc, char **argv) {
 
     char *last_slash;
-    int num_files = NUM_FILES;
     long length = 0;
     FILE *fp_file, *fp_path;
 
@@ -563,11 +561,6 @@ int main(int argc, char **argv) {
     strncpy(partition_dump_root, argv[1], sizeof(partition_dump_root));
 #ifndef NON_TREBLE
     strncpy(partition, argv[2], sizeof(partition));
-    if (argv[3])
-        strncpy(num_files_str, argv[3], sizeof(num_files_str));
-#else
-    if (argv[2])
-        strncpy(num_files_str, argv[2], sizeof(num_files_str));
 #endif
 
     fp_file = fopen(EXCLUCE_FILE_LIST_FILE, "r");
@@ -591,16 +584,8 @@ int main(int argc, char **argv) {
         fclose(fp_path);
     }
 
-    num_files = atoi(num_files_str);
-    if (num_files <= 0) {
-        fprintf(stderr, "Invalid number of files: %d, default to %d.\n", num_files, NUM_FILES);
-        num_files = 100;
-    }
-
-    while (num_files) {
-        fprintf(stderr, "Files to go: %d\n", num_files);
-
-        read_user_input(filename, sizeof(filename_buf), "File name?\n");
+    while (true) {
+        read_user_input(filename, sizeof(filename_buf), "# File name?\n");
 
         printf("######################### BEGIN %s #########################\n", filename);
         if (get_lib_from_system_dump(filename))
@@ -608,7 +593,6 @@ int main(int argc, char **argv) {
             last_slash = strrchr(filename, '/');
             if (last_slash)
                 check_emulator_for_lib(++last_slash);
-            num_files--;
         }
         printf("######################### END %s   #########################\n", filename);
     }
