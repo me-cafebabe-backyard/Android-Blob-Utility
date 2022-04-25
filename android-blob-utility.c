@@ -176,13 +176,13 @@ bool find_wildcard_libraries(char *beginning, char *end) {
 #ifdef IGNORE_SPECIFIC_WILDCARDS
     for (i = 0; ignore_wildcards_beginning[i]; i++) {
         if (strcmp(ignore_wildcards_beginning[i], beginning) == 0) {
-            fprintf(stderr, "# Warning: Ignored wildcard: %s%%s%s, because prefix matches with %s\n", beginning, end, ignore_wildcards_beginning[i]);
+            fprintf(stderr, "# Warning: Ignored wildcard: beginning=\"%s\" end=\"%s\", because prefix matches with \"%s\"\n", beginning, end, ignore_wildcards_beginning[i]);
             return false;
         }
     }
     for (i = 0; ignore_wildcards_end[i]; i++) {
         if (strcmp(ignore_wildcards_end[i], end) == 0) {
-            fprintf(stderr, "# Warning: Ignored wildcard: %s%%s%s, because suffix matches with %s\n", beginning, end, ignore_wildcards_end[i]);
+            fprintf(stderr, "# Warning: Ignored wildcard: beginning=\"%s\" end=\"%s\", because suffix matches with \"%s\"\n", beginning, end, ignore_wildcards_end[i]);
             return false;
         }
     }
@@ -207,7 +207,7 @@ bool find_wildcard_libraries(char *beginning, char *end) {
     }
 
     if (!found)
-        fprintf(stderr, "# Warning: wildcard %s%%s%s missing or broken\n", beginning, end);
+        fprintf(stderr, "# Warning: wildcard beginning=\"%s\" end=\"%s\" missing or broken\n", beginning, end);
     return found;
 }
 
@@ -230,7 +230,7 @@ bool process_wildcard(char *wildcard) {
         strcpy(end, ptr);
     }
 
-    fprintf(stderr, "# Info: Processing wildcard: %s%%s%s\n", beginning, end);
+    fprintf(stderr, "# Info: Processing wildcard: beginning=\"%s\" end=\"%s\"\n", beginning, end);
 
     return find_wildcard_libraries(beginning, end);
 }

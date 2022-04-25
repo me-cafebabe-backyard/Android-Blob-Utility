@@ -104,6 +104,7 @@ const char *ignore_wildcards_end[] = {
     "libmmcamera_%s.so",
     "libmmcamera_%s_eeprom.so",
     "_eeprom.so",
+    ".%s.so",
     NULL
 };
 #endif
