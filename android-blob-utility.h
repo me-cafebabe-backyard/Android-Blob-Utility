@@ -68,8 +68,14 @@ const char *blob_directories[] = {
 #endif // ADSP
 
 #ifdef QTI_CAMX
+#ifdef LIB32
+    "/lib/camera/",
+    "/lib/camera/components/",
+#endif // LIB32
+#ifdef LIB64
     "/lib64/camera/",
     "/lib64/camera/components/",
+#endif // LIB64
 #endif // QTI_CAMX
 
 #ifdef NON_TREBLE
