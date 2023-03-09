@@ -32,11 +32,6 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#ifdef USE_READLINE
-#include <readline/readline.h>
-#include <readline/history.h>
-#endif
-
 bool dot_so_finder(char *filename);
 void check_emulator_for_lib(char *emulator_check);
 
@@ -513,25 +508,11 @@ void read_user_input(char *input, int len, char *fmt) {
 
     char message[256];
     char res[256];
-#ifdef USE_READLINE
     char *tmp;
-#endif
 
     sprintf(message, fmt, input);
-#ifndef USE_READLINE
     fprintf(stdout, "%s", message);
     fgets(res, sizeof res, stdin);
-#else
-    rl_outstream = stdout;
-    tmp = readline(message);
-    if (tmp)
-    {
-        strncpy(res, tmp, sizeof res);
-        free(tmp);
-    }
-    else
-        res[0] = '\0';
-#endif
 
     remove_unwanted_characters(res);
     if (res[0])
