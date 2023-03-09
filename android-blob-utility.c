@@ -476,47 +476,22 @@ bool dot_so_finder(char *filename) {
     return true;
 }
 
-void remove_unwanted_characters(char *input) {
-
-    char *p;
-
-    /* If the received string is actually '/home/android/dump', with
-     * apostrophes, shift elements back one index to remove the front '
-     */
-
-    if (*input == '\'')
-        memmove(&input[0], &input[1], strlen(input));
-
-    p = strrchr(input, ' '); /* turn possible space at end to null */
-    if (p)
-        *p = '\0';
-
-    p = strrchr(input, '\''); /* turn possible apostrophe at end to null */
-    if (p)
-        *p = '\0';
-
-    p = strrchr(input, '\n'); /* turn possible newline at end to null */
-    if (p)
-        *p = '\0';
-
-    p = input + strlen(input); /* remove final slash in /home/android/dump/ */
-    if (*(p - 1) == '/')
-        *(p - 1) = '\0';
-}
-
-void read_user_input(char *input, int len, char *fmt) {
-
-    char message[256];
-    char res[256];
-    char *tmp;
-
-    sprintf(message, fmt, input);
-    fprintf(stdout, "%s", message);
-    fgets(res, sizeof res, stdin);
-
-    remove_unwanted_characters(res);
-    if (res[0])
-        strncpy(input, res, len);
+char *sgets(char *s, int n, char **strp){
+    if(**strp == '\0')return NULL;
+    int i;
+    for(i=0;i<n-1;++i, ++(*strp)){
+        s[i] = **strp;
+        if(**strp == '\0')
+            break;
+        if(**strp == '\r' || **strp == '\n'){
+            s[i]='\0';
+            ++(*strp);
+            break;
+        }
+    }
+    if(i==n-1)
+        s[i] = '\0';
+    return s;
 }
 
 int main(int argc, char **argv) {
@@ -525,7 +500,12 @@ int main(int argc, char **argv) {
     long length = 0;
     FILE *fp_file, *fp_path;
 
-    char filename_buf[256];
+    char input_buf[4096], c;
+    char *input = input_buf;
+    char **p = &input;
+    int input_index = 0;
+
+    char filename_buf[128];
     char *filename = filename_buf;
 
 #ifndef NON_TREBLE
@@ -568,16 +548,23 @@ int main(int argc, char **argv) {
     }
 
     while (true) {
-        read_user_input(filename, sizeof(filename_buf), "# File name?\n");
+        fprintf(stderr, "# File names? (One per line, Press ';' to end input)\n");
 
-        printf("######################### BEGIN %s #########################\n", filename);
-        if (get_lib_from_system_dump(filename))
-        {
-            last_slash = strrchr(filename, '/');
-            if (last_slash)
-                check_emulator_for_lib(++last_slash);
+        while((c = getchar()) != ';'){
+            input_buf[input_index++] = c;
         }
-        printf("######################### END %s   #########################\n", filename);
+        input_buf[input_index] = '\0';
+        p = &input;
+        while(sgets(filename_buf, sizeof(filename_buf), p) != NULL) {
+            printf("######################### BEGIN %s #########################\n", filename);
+            if (get_lib_from_system_dump(filename))
+            {
+                last_slash = strrchr(filename, '/');
+                if (last_slash)
+                    check_emulator_for_lib(++last_slash);
+            }
+            printf("######################### END %s   #########################\n", filename);
+        }
     }
 
     fprintf(stderr, "Completed successfully.\n");
